@@ -50,7 +50,7 @@ int main() {
         matrix[i] = lines[i];
     }
 
-    printf("Sorted matrix:\n");
+    //printf("Sorted matrix:\n");
     for (int i = 0; i < num_lines; i++) {
         printf("%s\n", matrix[i]);
     }
@@ -61,6 +61,6 @@ int main() {
     free(lines);
     free(matrix);
 
-    printf("Done!\n");
+    //printf("Done!\n");
     return 0;
 }
