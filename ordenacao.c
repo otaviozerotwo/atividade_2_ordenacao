@@ -2,65 +2,113 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH 1024
-#define MAX_NUM_LINES 1000
+void bubbleSort(char *arr[], int n);
+void selectionSort(char *arr[], int n);
+void insertionSort(char *arr[], int n);
 
-void bubble_sort(char **array, int size) {
-    int i, j;
-    char *tmp;
-    for (i = 0; i < size - 1; i++) {
-        for (j = 0; j < size - i - 1; j++) {
-            if (strcmp(array[j], array[j+1]) > 0) {
-                tmp = array[j];
-                array[j] = array[j+1];
-                array[j+1] = tmp;
+int main()
+{
+    char **arr;
+    int n;
+    int escolha;
+
+    FILE *arquivo = fopen("dados.txt", "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        exit(1);
+    }
+
+    fscanf(arquivo, "%d", &n);
+
+    arr = (char**) malloc(n * sizeof(char*));
+    if (arr == NULL) {
+        printf("Erro ao alocar a memória.\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < n; i++) {
+        char buffer[256];
+        fscanf(arquivo, "%s", buffer);
+        arr[i] = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
+        if (arr[i] == NULL) {
+            printf("Erro ao alocar a memória.\n");
+            exit(1);
+        }
+        strcpy(arr[i], buffer);
+    }
+
+    fclose(arquivo);
+
+    printf("Escolha um algoritmo de ordenação:\n");
+    printf("1 - Bubble Sort\n");
+    printf("2 - Selection Sort\n");
+    printf("3 - Insertion Sort\n");
+    scanf("%d", &escolha);
+
+    switch (escolha) {
+        case 1:
+            bubbleSort(arr, n);
+            break;
+        case 2:
+            selectionSort(arr, n);
+            break;
+        case 3:
+            insertionSort(arr, n);
+            break;
+        default:
+            printf("Escolha inválida.\n");
+            exit(1);
+    }
+
+    printf("Array ordenado:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s\n", arr[i]);
+    }
+
+    for (int i = 0; i < n; i++) {
+        free(arr[i]);
+    }
+    free(arr);
+    return 0;
+}
+
+void bubbleSort(char *arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (strcmp(arr[j], arr[j + 1]) > 0) {
+                char *temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
             }
         }
     }
 }
 
-int main() {
-    FILE *fp = fopen("dados.txt", "r");
-    if (fp == NULL) {
-        printf("Error: failed to open input file\n");
-        return 1;
-    }
-
-    char **lines = malloc(sizeof(char*) * MAX_NUM_LINES);
-    int num_lines = 0;
-    char buffer[MAX_LINE_LENGTH];
-    while (fgets(buffer, MAX_LINE_LENGTH, fp) != NULL) {
-        int len = strlen(buffer);
-        if (len > 0 && buffer[len-1] == '\n') {
-            buffer[len-1] = '\0';
+void selectionSort(char *arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (strcmp(arr[j], arr[min_idx]) < 0) {
+                min_idx = j;
+            }
         }
-        lines[num_lines] = strdup(buffer);
-        num_lines++;
-        if (num_lines >= MAX_NUM_LINES) {
-            printf("Error: input file has too many lines (max: %d)\n", MAX_NUM_LINES);
-            return 1;
+        char *temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+}
+
+void insertionSort(char *arr[], int n)
+{
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
         }
+        arr[j + 1] = key;
     }
-    fclose(fp);
-
-    bubble_sort(lines, num_lines);
-
-    char **matrix = malloc(sizeof(char*) * num_lines);
-    for (int i = 0; i < num_lines; i++) {
-        matrix[i] = lines[i];
-    }
-
-    //printf("Sorted matrix:\n");
-    for (int i = 0; i < num_lines; i++) {
-        printf("%s\n", matrix[i]);
-    }
-
-    for (int i = 0; i < num_lines; i++) {
-        free(lines[i]);
-    }
-    free(lines);
-    free(matrix);
-
-    //printf("Done!\n");
-    return 0;
 }
