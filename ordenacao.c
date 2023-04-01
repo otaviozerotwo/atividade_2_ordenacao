@@ -23,23 +23,25 @@ int main(){
     }
 
     int i = 0;
-    while(arquivo != EOF){
+    while(!feof(arquivo)){
         char linha[100];
         fgets(linha, 100, arquivo);
         char* time = strtok(linha, " ");
         char* resultado = strtok(NULL, " ");
         char* adversario = strtok(NULL, " ");
-        printf("%s\n", strcpy(partidas[i].nome_time, time));
-        printf("%s\n", strcpy(partidas[i].resultado, resultado));
-        printf("%s\n", strcpy(partidas[i].nome_adversario, adversario));
+        strcpy(partidas[i].nome_time, time);
+        strcpy(partidas[i].resultado, resultado);
+        strcpy(partidas[i].nome_adversario, adversario);
         i++;
     }
 
     fclose(arquivo);
-/*
+
     for(int j = 0; j < i; j++){
-        printf("%s\n%s\n%s\n", partidas[j].nome_time, partidas[j].resultado, partidas[j].nome_adversario);
+        printf("TIME: %s\n", partidas[j].nome_time);
+        printf("ADVERSARIO: %s\n", partidas[j].nome_adversario);
+        printf("PLACAR: %s\n", partidas[j].resultado);
     }
-*/
+
     return 0;
 }
