@@ -4,17 +4,33 @@
 
 typedef struct{
     char nome_time[100];
-    char nome_adversario[100];
-    char resultado[100];
-    int vitorias;
-    int derrotas;
-    int empates;
-    int pontos;
-    int saldo_gols;
-    int gols_pro;
-    int gols_contra;
+    int vitorias[100];
+    int derrotas[100];
+    int empates[100];
+    int pontos[100];
+    int saldo_gols[100];
+    int gols_pro[100];
+    int gols_contra[100];
 } Partida;
 
+void imprimir_vetor(char v[], int n){
+    for(int i = 0; i < n; i++){
+        printf("%s\n", v[i]);
+    }
+}
+
+void bubble_sort(Partida *arr, int n){
+    Partida temp;
+    for(int i = 0; i < n - 1; i++){
+        for(int j = 0; j < n - i - 1; j++){
+            if(strcmp(arr[j].nome_time, arr[j+1].nome_time)){
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
 
 int main(){
     Partida partidas[100];
@@ -26,16 +42,22 @@ int main(){
     }
 
     int i = 0;
+
     while(!feof(arquivo)){
         char linha[100];
         fgets(linha, 100, arquivo);
         linha[strcspn(linha, "\n")] = '\0';
         char* time = strtok(linha, " ");
         char* resultado = strtok(NULL, " ");
-        char* adversario = strtok(NULL, " ");
+
         strcpy(partidas[i].nome_time, time);
-        strcpy(partidas[i].resultado, resultado);
-        strcpy(partidas[i].nome_adversario, adversario);
+
+        char* gols_pro = strtok(resultado, "X");
+        char* gols_contra = strtok(NULL, " ");
+
+        strcpy(partidas[i].gols_pro, gols_pro);
+        strcpy(partidas[i].gols_contra, gols_contra);
+
         i++;
     }
 
@@ -60,6 +82,5 @@ int main(){
         printf("%s\t\t", partidas[j].gols_pro);
         printf("%s\n", partidas[j].gols_contra);
     }
-
     return 0;
 }
