@@ -7,11 +7,11 @@
 
 typedef struct{
     char nome_time[100];
-    int vitorias[100];
-    int derrotas[100];
-    int empates[100];
-    int pontos[100];
-    int saldo_gols[100];
+    int vitorias;
+    int derrotas;
+    int empates;
+    int pontos;
+    int saldo_gols;
     int gols_pro;
     int gols_contra;
 } Partida;
@@ -55,6 +55,10 @@ int read_teams_file(char* filename, Partida* partidas, int* num_teams) {
         partidas[team2_exists].gols_pro += gols_pro;
         partidas[team2_exists].gols_contra += gols_contra;
 
+        for(int i = 0; i < *num_teams; i++){
+            partidas[i].saldo_gols = partidas[i].gols_pro - partidas[i].gols_contra;
+        }
+
     }
 
     fclose(file);
@@ -92,11 +96,11 @@ int main(){
     if (read_teams_file(filename, partidas, &num_teams)) {
         for(int j = 0; j < num_teams; j++){
             printf("%s\t", partidas[j].nome_time);
-            printf("%s\t", partidas[j].pontos);
-            printf("%s\t\t", partidas[j].vitorias);
-            printf("%s\t", partidas[j].empates);
-            printf("%s\t\t", partidas[j].derrotas);
-            printf("%s\t", partidas[j].saldo_gols);
+            printf("%d\t", partidas[j].pontos);
+            printf("%d\t\t", partidas[j].vitorias);
+            printf("%d\t", partidas[j].empates);
+            printf("%d\t\t", partidas[j].derrotas);
+            printf("%d\t", partidas[j].saldo_gols);
             printf("%d\t\t", partidas[j].gols_pro);
             printf("%d\n", partidas[j].gols_contra);
         }
