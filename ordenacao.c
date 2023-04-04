@@ -59,6 +59,18 @@ int read_teams_file(char* filename, Partida* partidas, int* num_teams) {
             partidas[i].saldo_gols = partidas[i].gols_pro - partidas[i].gols_contra;
         }
 
+        for(int i = 0; i < *num_teams; i++){
+            if(gols_pro > gols_contra){
+                partidas[i].pontos += 3;
+                partidas[i].vitorias++;
+            }else if(gols_pro == gols_contra){
+                partidas[i].pontos += 1;
+                partidas[i].empates++;
+            }else{
+                partidas[i].derrotas++;
+            }
+        }
+
     }
 
     fclose(file);
@@ -96,13 +108,13 @@ int main(){
     if (read_teams_file(filename, partidas, &num_teams)) {
         for(int j = 0; j < num_teams; j++){
             printf("%s\t", partidas[j].nome_time);
-            printf("%d\t", partidas[j].pontos);
-            printf("%d\t\t", partidas[j].vitorias);
-            printf("%d\t", partidas[j].empates);
-            printf("%d\t\t", partidas[j].derrotas);
-            printf("%d\t", partidas[j].saldo_gols);
-            printf("%d\t\t", partidas[j].gols_pro);
-            printf("%d\n", partidas[j].gols_contra);
+            printf("  %d\t", partidas[j].pontos);
+            printf("  %d\t\t", partidas[j].vitorias);
+            printf("  %d\t", partidas[j].empates);
+            printf("  %d\t\t", partidas[j].derrotas);
+            printf("  %d\t", partidas[j].saldo_gols);
+            printf("  %d\t\t", partidas[j].gols_pro);
+            printf("  %d\n", partidas[j].gols_contra);
         }
     }
     return 0;
