@@ -16,50 +16,72 @@ typedef struct{
     int gols_contra;
 } Partida;
 
-int read_teams_file(char* filename, Partida* partidas, int* num_teams) {
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
+void imprimir_tabela(Partida* partidas, int* num_times){
+    printf("TIME\t");
+    printf("PONTOS\t");
+    printf("VITORIAS\t");
+    printf("EMPATES\t");
+    printf("DERROTAS\t");
+    printf("SALDO\t");
+    printf("GOLS_PRO\t");
+    printf("GOLS_CONTRA\n");
+
+    for(int j = 0; j < num_times; j++){
+            printf("%s\t", partidas[j].nome_time);
+            printf("  %d\t", partidas[j].pontos);
+            printf("  %d\t\t", partidas[j].vitorias);
+            printf("  %d\t", partidas[j].empates);
+            printf("  %d\t\t", partidas[j].derrotas);
+            printf("  %d\t", partidas[j].saldo_gols);
+            printf("  %d\t\t", partidas[j].gols_pro);
+            printf("  %d\n", partidas[j].gols_contra);
+    }
+}
+
+int ler_arquivo(char* nome_arquivo, Partida* partidas, int* num_times) {
+    FILE* arquivo = fopen(nome_arquivo, "r");
+    if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 0;
     }
 
-    char line[MAX_LINE_SIZE];
+    char linha_arquivo[MAX_LINE_SIZE];
 
-    while (fgets(line, MAX_LINE_SIZE, file) != NULL) {
-        char team1[MAX_LINE_SIZE], team2[MAX_LINE_SIZE];
+    while (fgets(linha_arquivo, MAX_LINE_SIZE, arquivo) != NULL) {
+        char time_1[MAX_LINE_SIZE], time_2[MAX_LINE_SIZE];
         int gols_pro, gols_contra;
-        sscanf(line, "%s %dX%d %s", team1, &gols_pro, &gols_contra, team2);
-        int team1_exists = -1, team2_exists = -1;
-        for (int i = 0; i < *num_teams; i++) {
-            if (strcmp(partidas[i].nome_time, team1) == 0) {
-                team1_exists = i;
+        sscanf(linha_arquivo, "%s %dX%d %s", time_1, &gols_pro, &gols_contra, time_2);
+        int time_1_existe = -1, time_2_existe = -1;
+        for (int i = 0; i < *num_times; i++) {
+            if (strcmp(partidas[i].nome_time, time_1) == 0) {
+                time_1_existe = i;
             }
-            if (strcmp(partidas[i].nome_time, team2) == 0) {
-                team2_exists = i;
+            if (strcmp(partidas[i].nome_time, time_2) == 0) {
+                time_2_existe = i;
             }
         }
-        if (team1_exists == -1) {
-            strcpy(partidas[*num_teams].nome_time, team1);
-            partidas[*num_teams].gols_pro = 0;
-            partidas[*num_teams].gols_contra = 0;
-            team1_exists = (*num_teams)++;
+        if (time_1_existe == -1) {
+            strcpy(partidas[*num_times].nome_time, time_1);
+            partidas[*num_times].gols_pro = 0;
+            partidas[*num_times].gols_contra = 0;
+            time_1_existe = (*num_times)++;
         }
-        if (team2_exists == -1) {
-            strcpy(partidas[*num_teams].nome_time, team2);
-            partidas[*num_teams].gols_pro = 0;
-            partidas[*num_teams].gols_contra = 0;
-            team2_exists = (*num_teams)++;
+        if (time_2_existe == -1) {
+            strcpy(partidas[*num_times].nome_time, time_2);
+            partidas[*num_times].gols_pro = 0;
+            partidas[*num_times].gols_contra = 0;
+            time_2_existe = (*num_times)++;
         }
-        partidas[team1_exists].gols_pro += gols_pro;
-        partidas[team1_exists].gols_contra += gols_contra;
-        partidas[team2_exists].gols_pro += gols_pro;
-        partidas[team2_exists].gols_contra += gols_contra;
+        partidas[time_1_existe].gols_pro += gols_pro;
+        partidas[time_1_existe].gols_contra += gols_contra;
+        partidas[time_2_existe].gols_pro += gols_pro;
+        partidas[time_2_existe].gols_contra += gols_contra;
 
-        for(int i = 0; i < *num_teams; i++){
+        for(int i = 0; i < *num_times; i++){
             partidas[i].saldo_gols = partidas[i].gols_pro - partidas[i].gols_contra;
         }
 
-        for(int i = 0; i < *num_teams; i++){
+        for(int i = 0; i < *num_times; i++){
             if(gols_pro > gols_contra){
                 partidas[i].pontos += 3;
                 partidas[i].vitorias++;
@@ -73,7 +95,7 @@ int read_teams_file(char* filename, Partida* partidas, int* num_teams) {
 
     }
 
-    fclose(file);
+    fclose(arquivo);
 
     return 1;
 }
@@ -82,40 +104,34 @@ void bubble_sort(Partida *arr, int n){
     Partida temp;
     for(int i = 0; i < n - 1; i++){
         for(int j = 0; j < n - i - 1; j++){
-            if(strcmp(arr[j].nome_time, arr[j+1].nome_time)){
+            if(arr[j].pontos < arr[j+1].pontos){
                 temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
+            //}else if(arr[j].pontos == arr[j+1].pontos){
+
             }
         }
     }
 }
 
+void selection_sort(Partida *arr, int n) {
+
+}
+
+void insertion_sort(Partida *arr, int n){
+
+}
+
 int main(){
-    char filename[] = "dados.txt";
+    char nome_arquivo[] = "dados.txt";
     Partida partidas[MAX_TEAMS];
-    int num_teams = 0;
+    int num_times = 0;
 
-    printf("TIME\t");
-    printf("PONTOS\t");
-    printf("VITORIAS\t");
-    printf("EMPATES\t");
-    printf("DERROTAS\t");
-    printf("SALDO\t");
-    printf("GOLS_PRO\t");
-    printf("GOLS_CONTRA\n");
+    ler_arquivo(nome_arquivo, partidas, &num_times);
+    //imprimir_tabela(partidas, num_times);
+    //bubble_sort(partidas, num_times);
+    imprimir_tabela(partidas, num_times);
 
-    if (read_teams_file(filename, partidas, &num_teams)) {
-        for(int j = 0; j < num_teams; j++){
-            printf("%s\t", partidas[j].nome_time);
-            printf("  %d\t", partidas[j].pontos);
-            printf("  %d\t\t", partidas[j].vitorias);
-            printf("  %d\t", partidas[j].empates);
-            printf("  %d\t\t", partidas[j].derrotas);
-            printf("  %d\t", partidas[j].saldo_gols);
-            printf("  %d\t\t", partidas[j].gols_pro);
-            printf("  %d\n", partidas[j].gols_contra);
-        }
-    }
     return 0;
 }
