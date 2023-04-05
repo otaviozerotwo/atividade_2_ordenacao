@@ -79,16 +79,14 @@ int ler_arquivo(char* nome_arquivo, Partida* partidas, int* num_times) {
             partidas[i].saldo_gols = partidas[i].gols_pro - partidas[i].gols_contra;
         }
 
-        for(int i = 0; i < *num_times; i++){
-            if(partidas[i].gols_pro > partidas[i].gols_contra){
-                partidas[i].pontos += 3;
-                partidas[i].vitorias++;
-            }else if(partidas[i].gols_pro == partidas[i].gols_contra){
-                partidas[i].pontos += 1;
-                partidas[i].empates++;
-            }else{
-                partidas[i].derrotas++;
-            }
+        if(partidas[time_1_existe].gols_pro > partidas[time_2_existe].gols_contra){
+            partidas[time_1_existe].vitorias++;
+            partidas[time_1_existe].pontos += 3;
+        }
+
+        if(partidas[time_2_existe].gols_contra > partidas[time_1_existe].gols_pro){
+            partidas[time_2_existe].vitorias++;
+            partidas[time_2_existe].pontos += 3;
         }
 
     }
