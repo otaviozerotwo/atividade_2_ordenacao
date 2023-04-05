@@ -74,18 +74,16 @@ int ler_arquivo(char* nome_arquivo, Partida* partidas, int* num_times) {
         }
         partidas[time_1_existe].gols_pro += gols_pro;
         partidas[time_1_existe].gols_contra += gols_contra;
-        partidas[time_2_existe].gols_pro += gols_pro;
-        partidas[time_2_existe].gols_contra += gols_contra;
 
         for(int i = 0; i < *num_times; i++){
             partidas[i].saldo_gols = partidas[i].gols_pro - partidas[i].gols_contra;
         }
 
         for(int i = 0; i < *num_times; i++){
-            if(gols_pro > gols_contra){
+            if(partidas[i].gols_pro > partidas[i].gols_contra){
                 partidas[i].pontos += 3;
                 partidas[i].vitorias++;
-            }else if(gols_pro == gols_contra){
+            }else if(partidas[i].gols_pro == partidas[i].gols_contra){
                 partidas[i].pontos += 1;
                 partidas[i].empates++;
             }else{
@@ -108,7 +106,18 @@ void bubble_sort(Partida *arr, int n){
                 temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
-            //}else if(arr[j].pontos == arr[j+1].pontos){
+            }else if(arr[j].pontos == arr[j+1].pontos){
+                if(arr[j].vitorias > arr[j+1].vitorias){
+                    temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }else if(arr[j].vitorias == arr[j+1].vitorias){
+                    if(arr[j].saldo_gols > arr[j+1].saldo_gols){
+                        temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp;
+                    }
+                }
 
             }
         }
@@ -131,6 +140,8 @@ int main(){
     ler_arquivo(nome_arquivo, partidas, &num_times);
     //imprimir_tabela(partidas, num_times);
     //bubble_sort(partidas, num_times);
+
+    //printf("\n\n");
     imprimir_tabela(partidas, num_times);
 
     return 0;
