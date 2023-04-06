@@ -156,7 +156,36 @@ void selection_sort(Time *arr, int n) {
 }
 
 void insertion_sort(Time *arr, int n){
+    Time temp;
+    for(int i = 1; i < n; i++){
+        temp = arr[i];
+        int j = i - 1;
 
+        while(j >= 0 && arr[j].pontos == temp.pontos){
+            if(arr[j].vitorias < temp.vitorias){
+                arr[j+1] = arr[j];
+                j = j - 1;
+            }else if(arr[j].vitorias == temp.vitorias){
+                if(arr[j].saldo_gols < temp.saldo_gols){
+                    arr[j+1] = arr[j];
+                    j = j - 1;
+                }else if(arr[j].saldo_gols == temp.saldo_gols){
+                    if(arr[j].gols_pro < temp.gols_pro){
+                        arr[j+1] = arr[j];
+                        j = j + 1;
+                    }else{
+                        break;
+                    }
+                }else{
+                    break;
+                }
+            }else{
+                break;
+            }
+        }
+
+        arr[j+1] = temp;
+    }
 }
 
 int main(){
@@ -167,10 +196,11 @@ int main(){
     ler_arquivo(nome_arquivo, time, &num_times);
     imprimir_tabela(time, num_times);
     //bubble_sort(time, num_times);
-    selection_sort(time, num_times);
+    //selection_sort(time, num_times);
+    //insertion_sort(time, num_times);
 
-    printf("\n\n");
-    imprimir_tabela(time, num_times);
+    //printf("\n\n");
+    //imprimir_tabela(time, num_times);
 
     return 0;
 }
