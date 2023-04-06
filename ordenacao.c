@@ -46,10 +46,10 @@ void mostrar_menu(Time* arr, int n){
             printf("Opcao invalida!\n\n");
             break;
         }
-    }while(op != 0);
+    }while(op != 9);
 }
 
-void imprimir_tabela(Time* time, int* num_times){
+void imprimir_tabela(Time* arr, int* n){
     printf("TIME\t");
     printf("PONTOS\t");
     printf("VITORIAS\t");
@@ -59,19 +59,19 @@ void imprimir_tabela(Time* time, int* num_times){
     printf("GOLS_PRO\t");
     printf("GOLS_CONTRA\n");
 
-    for(int j = 0; j < num_times; j++){
-            printf("%s\t", time[j].nome_time);
-            printf("  %d\t", time[j].pontos);
-            printf("  %d\t\t", time[j].vitorias);
-            printf("  %d\t", time[j].empates);
-            printf("  %d\t\t", time[j].derrotas);
-            printf("  %d\t", time[j].saldo_gols);
-            printf("  %d\t\t", time[j].gols_pro);
-            printf("  %d\n", time[j].gols_contra);
+    for(int j = 0; j < n; j++){
+            printf("%s\t", arr[j].nome_time);
+            printf("  %d\t", arr[j].pontos);
+            printf("  %d\t\t", arr[j].vitorias);
+            printf("  %d\t", arr[j].empates);
+            printf("  %d\t\t", arr[j].derrotas);
+            printf("  %d\t", arr[j].saldo_gols);
+            printf("  %d\t\t", arr[j].gols_pro);
+            printf("  %d\n", arr[j].gols_contra);
     }
 }
 
-int ler_arquivo(char* nome_arquivo, Time* time, int* num_times) {
+int ler_arquivo(char* nome_arquivo, Time* arr, int* n) {
     FILE* arquivo = fopen(nome_arquivo, "r");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -85,47 +85,47 @@ int ler_arquivo(char* nome_arquivo, Time* time, int* num_times) {
         int gols_pro, gols_contra;
         sscanf(linha_arquivo, "%s %dX%d %s", time_1, &gols_pro, &gols_contra, time_2);
         int time_1_existe = -1, time_2_existe = -1;
-        for (int i = 0; i < *num_times; i++) {
-            if (strcmp(time[i].nome_time, time_1) == 0) {
+        for (int i = 0; i < *n; i++) {
+            if (strcmp(arr[i].nome_time, time_1) == 0) {
                 time_1_existe = i;
             }
-            if (strcmp(time[i].nome_time, time_2) == 0) {
+            if (strcmp(arr[i].nome_time, time_2) == 0) {
                 time_2_existe = i;
             }
         }
         if (time_1_existe == -1) {
-            strcpy(time[*num_times].nome_time, time_1);
-            time[*num_times].gols_pro = 0;
-            time[*num_times].gols_contra = 0;
-            time_1_existe = (*num_times)++;
+            strcpy(arr[*n].nome_time, time_1);
+            arr[*n].gols_pro = 0;
+            arr[*n].gols_contra = 0;
+            time_1_existe = (*n)++;
         }
         if (time_2_existe == -1) {
-            strcpy(time[*num_times].nome_time, time_2);
-            time[*num_times].gols_pro = 0;
-            time[*num_times].gols_contra = 0;
-            time_2_existe = (*num_times)++;
+            strcpy(arr[*n].nome_time, time_2);
+            arr[*n].gols_pro = 0;
+            arr[*n].gols_contra = 0;
+            time_2_existe = (*n)++;
         }
-        time[time_1_existe].gols_pro += gols_pro;
-        time[time_1_existe].gols_contra += gols_contra;
+        arr[time_1_existe].gols_pro += gols_pro;
+        arr[time_1_existe].gols_contra += gols_contra;
 
-        for(int i = 0; i < *num_times; i++){
-            time[i].saldo_gols = time[i].gols_pro - time[i].gols_contra;
+        for(int i = 0; i < *n; i++){
+            arr[i].saldo_gols = arr[i].gols_pro - arr[i].gols_contra;
         }
 
-        if(time[time_1_existe].gols_pro > time[time_2_existe].gols_contra){
-            time[time_1_existe].vitorias++;
-            time[time_1_existe].pontos += 3;
-            time[time_2_existe].derrotas++;
-        }else if(time[time_2_existe].gols_contra > time[time_1_existe].gols_pro){
-            time[time_2_existe].vitorias++;
-            time[time_2_existe].pontos += 3;
-            time[time_1_existe].derrotas++;
-        }else if(time[time_1_existe].gols_pro == time[time_2_existe].gols_contra){
-            time[time_1_existe].empates++;
-            time[time_1_existe].pontos += 1;
-        }else if(time[time_2_existe].gols_contra == time[time_1_existe].gols_pro){
-            time[time_2_existe].empates++;
-            time[time_2_existe].pontos += 1;
+        if(arr[time_1_existe].gols_pro > arr[time_2_existe].gols_contra){
+            arr[time_1_existe].vitorias++;
+            arr[time_1_existe].pontos += 3;
+            arr[time_2_existe].derrotas++;
+        }else if(arr[time_2_existe].gols_contra > arr[time_1_existe].gols_pro){
+            arr[time_2_existe].vitorias++;
+            arr[time_2_existe].pontos += 3;
+            arr[time_1_existe].derrotas++;
+        }else if(arr[time_1_existe].gols_pro == arr[time_2_existe].gols_contra){
+            arr[time_1_existe].empates++;
+            arr[time_1_existe].pontos += 1;
+        }else if(arr[time_2_existe].gols_contra == arr[time_1_existe].gols_pro){
+            arr[time_2_existe].empates++;
+            arr[time_2_existe].pontos += 1;
         }
 
     }
