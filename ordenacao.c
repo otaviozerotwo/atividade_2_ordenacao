@@ -16,6 +16,39 @@ typedef struct{
     int gols_contra;
 } Time;
 
+void mostrar_menu(Time* arr, int n){
+    int op = 0;
+
+    do{
+        printf("Escolha qual metodo de ordenacao deseja usar:\n\n");
+        printf("1: Bubble Sort\n");
+        printf("2: Selection Sort\n");
+        printf("3: Insertion Sort\n");
+        printf("9: Sair\n");
+        scanf("%d", &op);
+
+        switch(op){
+        case 1:
+            bubble_sort(arr, n);
+            imprimir_tabela(arr, n);
+            exit(0);
+        case 2:
+            selection_sort(arr, n);
+            imprimir_tabela(arr, n);
+            exit(0);
+        case 3:
+            insertion_sort(arr, n);
+            imprimir_tabela(arr, n);
+            exit(0);
+        case 9:
+            exit(0);
+        default:
+            printf("Opcao invalida!\n\n");
+            break;
+        }
+    }while(op != 0);
+}
+
 void imprimir_tabela(Time* time, int* num_times){
     printf("TIME\t");
     printf("PONTOS\t");
@@ -194,13 +227,8 @@ int main(){
     int num_times = 0;
 
     ler_arquivo(nome_arquivo, time, &num_times);
-    imprimir_tabela(time, num_times);
-    //bubble_sort(time, num_times);
-    //selection_sort(time, num_times);
-    //insertion_sort(time, num_times);
 
-    //printf("\n\n");
-    //imprimir_tabela(time, num_times);
+    mostrar_menu(time, num_times);
 
     return 0;
 }
