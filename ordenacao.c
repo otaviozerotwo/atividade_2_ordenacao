@@ -49,7 +49,7 @@ void mostrar_menu(Time* arr, int n){
     }while(op != 9);
 }
 
-void imprimir_tabela(Time* arr, int* n){
+void imprimir_tabela(Time* arr, int n){
     printf("TIME\t");
     printf("PONTOS\t");
     printf("VITORIAS\t");
@@ -165,20 +165,20 @@ void selection_sort(Time *arr, int n) {
     Time temp;
     for(int i = 0; i < n - 1; i++){
         for(int j = i + 1; j < n; j++){
-            if(arr[j].pontos < arr[j+1].pontos){
-                temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
-            }else if(arr[j].pontos == arr[j+1].pontos){
-                if(arr[j].vitorias > arr[j+1].vitorias){
-                    temp = arr[j];
-                    arr[j] = arr[j+1];
-                    arr[j+1] = temp;
-                }else if(arr[j].vitorias == arr[j+1].vitorias){
-                    if(arr[j].saldo_gols > arr[j+1].saldo_gols){
-                        temp = arr[j];
-                        arr[j] = arr[j+1];
-                        arr[j+1] = temp;
+            if(arr[i].pontos < arr[j].pontos){
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }else if(arr[i].pontos == arr[j].pontos){
+                if(arr[i].vitorias < arr[j].vitorias){
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }else if(arr[i].vitorias == arr[j].vitorias){
+                    if(arr[j].saldo_gols < arr[j+1].saldo_gols){
+                        temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
                     }
                 }
 
