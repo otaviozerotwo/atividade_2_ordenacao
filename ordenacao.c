@@ -3,8 +3,7 @@
 #include<string.h>
 
 #define MAX_LINE_SIZE 15
-#define MAX_TEAMS 12
-#define MAX_PARTIDAS 45
+#define MAX_TIMES 12
 
 typedef struct{
     char nome_time[100];
@@ -16,15 +15,6 @@ typedef struct{
     int gols_pro;
     int gols_contra;
 } Time;
-
-typedef struct{
-    Time time_1;
-    int gols_pro_1;
-    int gols_contra_1;
-    Time time_2;
-    int gols_pro_2;
-    int gols_contra_2;
-} Partida;
 
 void mostrar_menu(Time* arr){
     int op = 0;
@@ -69,7 +59,7 @@ void imprimir_tabela(Time* arr){
     printf("GOLS_PRO\t");
     printf("GOLS_CONTRA\n");
 
-    for(int j = 0; j < MAX_TEAMS; j++){
+    for(int j = 0; j < MAX_TIMES; j++){
             printf("%s\t", arr[j].nome_time);
             printf("  %d\t", arr[j].pontos);
             printf("  %d\t\t", arr[j].vitorias);
@@ -81,7 +71,7 @@ void imprimir_tabela(Time* arr){
     }
 }
 
-int ler_arquivo(char* nome_arquivo, Time* arr, Partida* arr_2){
+int ler_arquivo(char* nome_arquivo, Time* arr){
     FILE* arquivo = fopen(nome_arquivo, "r");
     if(arquivo == NULL){
         printf("Erro ao abrir o arquivo.\n");
@@ -93,10 +83,10 @@ int ler_arquivo(char* nome_arquivo, Time* arr, Partida* arr_2){
 
     while(!feof(arquivo)){
         char time_1[MAX_LINE_SIZE], time_2[MAX_LINE_SIZE];
-        int gols_pro_1, gols_contra_1, gols_pro_2, gols_contra_2;
+        int gols_pro, gols_contra;
 
         //Lê a partida do arquivo
-        fscanf(arquivo, "%s %dX%d %s", time_1, &gols_pro_1, &gols_contra_1, time_2);
+        fscanf(arquivo, "%s %dX%d %s", time_1, &gols_pro, &gols_contra, time_2);
 
         //Verifica se se time_1 e time_2 já estão cadastrados
         int time_1_existe = -1, time_2_existe = -1;
@@ -133,24 +123,16 @@ int ler_arquivo(char* nome_arquivo, Time* arr, Partida* arr_2){
             arr[num_times].gols_pro = 0;
             arr[num_times].gols_contra = 0;
             arr[num_times].saldo_gols = 0;
-            time_1_existe = num_times;
+            time_2_existe = num_times;
             num_times++;
         }
 
-        //Armazena a partida
-        arr_2[num_partidas].time_1 = arr[time_1_existe];
-        arr_2[num_partidas].gols_pro_1 = gols_pro_1;
-        arr_2[num_partidas].gols_contra_1 = gols_contra_1;
-        arr_2[num_partidas].time_2 = arr[time_2_existe];
-        arr_2[num_partidas].gols_pro_2 = gols_pro_2;
-        arr_2[num_partidas].gols_contra_2 = gols_contra_2;
-
         //Atualiza os dados dos times
-        if(gols_pro_1 > gols_pro_2){ //Vitória do time_1
+        if(gols_pro > gols_contra){ //Vitória do time_1
             arr[time_1_existe].vitorias++;
             arr[time_1_existe].pontos += 3;
             arr[time_2_existe].derrotas++;
-        }else if(gols_pro_2 > gols_pro_1){ //Vitória do time_2
+        }else if(gols_contra > gols_pro){ //Vitória do time_2
             arr[time_2_existe].vitorias++;
             arr[time_2_existe].pontos += 3;
             arr[time_1_existe].derrotas++;
@@ -161,12 +143,12 @@ int ler_arquivo(char* nome_arquivo, Time* arr, Partida* arr_2){
             arr[time_2_existe].empates++;
         }
 
-        arr[time_1_existe].gols_pro += gols_pro_1;
-        arr[time_1_existe].gols_contra += gols_contra_1;
-        arr[time_1_existe].saldo_gols += gols_pro_1 - gols_contra_1;
-        arr[time_2_existe].gols_pro += gols_pro_2;
-        arr[time_2_existe].gols_contra += gols_contra_2;
-        arr[time_2_existe].saldo_gols += gols_pro_2 - gols_contra_2;
+        arr[time_1_existe].gols_pro += gols_pro;
+        arr[time_1_existe].gols_contra += gols_contra;
+        arr[time_1_existe].saldo_gols += gols_pro - gols_contra;
+        arr[time_2_existe].gols_pro += gols_contra;
+        arr[time_2_existe].gols_contra += gols_pro;
+        arr[time_2_existe].saldo_gols += gols_contra - gols_pro;
 
         num_partidas++;
     }
@@ -179,8 +161,8 @@ int ler_arquivo(char* nome_arquivo, Time* arr, Partida* arr_2){
 void bubble_sort(Time *arr){
     Time temp;
 
-    for(int i = 0; i < MAX_TEAMS - 1; i++){
-        for(int j = 0; j < MAX_TEAMS - i - 1; j++){
+    for(int i = 0; i < MAX_TIMES - 1; i++){
+        for(int j = 0; j < MAX_TIMES - i - 1; j++){
             if(arr[j].pontos < arr[j+1].pontos){
                 temp = arr[j];
                 arr[j] = arr[j+1];
@@ -206,8 +188,8 @@ void bubble_sort(Time *arr){
 void selection_sort(Time *arr) {
     Time temp;
 
-    for(int i = 0; i < MAX_TEAMS - 1; i++){
-        for(int j = i + 1; j < MAX_TEAMS; j++){
+    for(int i = 0; i < MAX_TIMES - 1; i++){
+        for(int j = i + 1; j < MAX_TIMES; j++){
             if(arr[i].pontos < arr[j].pontos){
                 temp = arr[i];
                 arr[i] = arr[j];
@@ -235,7 +217,7 @@ void insertion_sort(Time *arr){
     int i, j;
     Time temp;
 
-    for(i = 1; i < MAX_TEAMS; i++){
+    for(i = 1; i < MAX_TIMES; i++){
         temp = arr[i];
         j = i - 1;
 
@@ -273,10 +255,9 @@ void insertion_sort(Time *arr){
 int main(){
     char nome_arquivo[] = "dados.txt";
 
-    Time time[MAX_TEAMS];
-    Partida partida[MAX_PARTIDAS];
+    Time time[MAX_TIMES];
 
-    ler_arquivo(nome_arquivo, time, partida);
+    ler_arquivo(nome_arquivo, time);
 
     mostrar_menu(time);
 
