@@ -215,40 +215,19 @@ void selection_sort(Time *arr) {
 }
 
 void insertion_sort(Time *arr){
-    int i, j;
     Time temp;
+    int j = 0;
 
-    for(i = 1; i < MAX_TIMES; i++){
-        temp = arr[i];
-        j = i - 1;
-
-        //compara primeiro os pontos
-        while(j >= 0 && arr[j].pontos == temp.pontos){
-            //em caso de empate nos pontos, compara as vitórias
-            if(arr[j].vitorias < temp.vitorias){
+    for (int i = 1; i < MAX_TIMES; i++) {
+        temp = arr[i], j;
+        for (j = i - 1; j >= 0 && temp.pontos > arr[j].pontos; j--) {
+            arr[j+1] = arr[j];
+            if(temp.vitorias == arr[j].vitorias){
                 arr[j+1] = arr[j];
-                j = j - 1;
-            }else if(arr[j].vitorias == temp.vitorias){
-                //Em caso de empate nas vitórias, compara o saldo de gols
-                if(arr[j].saldo_gols < temp.saldo_gols){
-                    arr[j+1] = arr[j];
-                    j = j - 1;
-                }else if(arr[j].saldo_gols == temp.saldo_gols){
-                    //Em caso de empate no saldo de gols, compara os gols pró
-                    if(arr[j].gols_pro < temp.gols_pro){
-                        arr[j+1] = arr[j];
-                        j = j + 1;
-                    }else{
-                        break;
-                    }
-                }else{
-                    break;
-                }
-            }else{
-                break;
+            }else if(temp.saldo_gols > arr[j].saldo_gols){
+                arr[j+1] = arr[j];
             }
         }
-
         arr[j+1] = temp;
     }
 }
