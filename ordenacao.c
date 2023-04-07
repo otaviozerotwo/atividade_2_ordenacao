@@ -37,7 +37,7 @@ void mostrar_menu(Time* arr){
             imprimir_tabela(arr);
             exit(0);
         case 3:
-            //insertion_sort(arr);
+            insertion_sort(arr);
             imprimir_tabela(arr);
             exit(0);
         case 9:
@@ -50,24 +50,24 @@ void mostrar_menu(Time* arr){
 }
 
 void imprimir_tabela(Time* arr){
-    printf("TIME\t");
-    printf("PONTOS\t");
-    printf("VITORIAS\t");
-    printf("EMPATES\t");
-    printf("DERROTAS\t");
-    printf("SALDO\t");
-    printf("GOLS_PRO\t");
-    printf("GOLS_CONTRA\n");
+    printf("TIME\t\t");
+    printf("PTOS\t");
+    printf("VIT\t");
+    printf("EMP\t");
+    printf("DRT\t");
+    printf("SG\t");
+    printf("GP\t");
+    printf("GC\n");
 
     for(int j = 0; j < MAX_TIMES; j++){
-            printf("%s\t", arr[j].nome_time);
-            printf("  %d\t", arr[j].pontos);
-            printf("  %d\t\t", arr[j].vitorias);
-            printf("  %d\t", arr[j].empates);
-            printf("  %d\t\t", arr[j].derrotas);
-            printf("  %d\t", arr[j].saldo_gols);
-            printf("  %d\t\t", arr[j].gols_pro);
-            printf("  %d\n", arr[j].gols_contra);
+            printf("%s\t\t", arr[j].nome_time);
+            printf("%d\t", arr[j].pontos);
+            printf("%d\t", arr[j].vitorias);
+            printf("%d\t", arr[j].empates);
+            printf("%d\t", arr[j].derrotas);
+            printf("%d\t", arr[j].saldo_gols);
+            printf("%d\t", arr[j].gols_pro);
+            printf("%d\n", arr[j].gols_contra);
     }
 }
 
@@ -127,7 +127,7 @@ int ler_arquivo(char* nome_arquivo, Time* arr){
             num_times++;
         }
 
-        //Atualiza os dados dos times
+        //Atualiza número de vitórias, derrotas, empates e calcula os pontos dos times
         if(gols_pro > gols_contra){ //Vitória do time_1
             arr[time_1_existe].vitorias++;
             arr[time_1_existe].pontos += 3;
@@ -143,6 +143,7 @@ int ler_arquivo(char* nome_arquivo, Time* arr){
             arr[time_2_existe].empates++;
         }
 
+        //Atualiza quantidade de gols pró e gols contra dos times
         arr[time_1_existe].gols_pro += gols_pro;
         arr[time_1_existe].gols_contra += gols_contra;
         arr[time_1_existe].saldo_gols += gols_pro - gols_contra;
